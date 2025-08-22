@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:quickbites/providers/menu_providers.dart';
 import 'package:quickbites/screen/admin/screen/admin_dashboard.dart';
 import 'package:quickbites/screen/user/auth/login_screen.dart';
 import 'package:quickbites/screen/user/provider/auth_provider.dart';
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => RestaurantProvider()),
         ChangeNotifierProvider(create: (_) => CartProvider()),
         ChangeNotifierProvider(create: (_) => OrderProvider()),
+        ChangeNotifierProvider(create: (_) => MenuProvider()),
       ],
       child: MaterialApp(
         title: 'Food Delivery App',
