@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:quickbites/screen/user/provider/auth_provider.dart';
 import 'package:quickbites/screen/user/provider/cart_provider.dart';
 import 'package:quickbites/screen/user/provider/order_provider.dart';
+import 'package:quickbites/screen/user/screen/order_screen.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
@@ -120,7 +121,7 @@ class CartScreen extends StatelessWidget {
                                     ),
                                     const SizedBox(width: 8),
                                     Text(
-                                      '₹${cartItem.menuItem.price.toStringAsFixed(2)}',
+                                      'Rs ${cartItem.menuItem.price.toStringAsFixed(2)}',
                                       style: const TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
@@ -214,7 +215,7 @@ class CartScreen extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          '₹${cart.totalAmount.toStringAsFixed(2)}',
+                          'Rs ${cart.totalAmount.toStringAsFixed(2)}',
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -234,7 +235,7 @@ class CartScreen extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          '₹40.00',
+                          'Rs 40.00',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -254,7 +255,7 @@ class CartScreen extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          '₹${(cart.totalAmount + 40).toStringAsFixed(2)}',
+                          'Rs ${(cart.totalAmount + 40).toStringAsFixed(2)}',
                           style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -280,6 +281,7 @@ class CartScreen extends StatelessWidget {
                                     orderProvider,
                                     cart,
                                   ),
+
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.orange,
                               shape: RoundedRectangleBorder(
@@ -312,7 +314,7 @@ class CartScreen extends StatelessWidget {
     );
   }
 
-  void _placeOrder(
+  Future<void> _placeOrder(
     BuildContext context,
     AuthProvider authProvider,
     OrderProvider orderProvider,
@@ -328,25 +330,57 @@ class CartScreen extends StatelessWidget {
       return;
     }
 
-    bool success = await orderProvider.placeOrder(
-      user: authProvider.user!,
-      cart: cartProvider,
-    );
+    try {
+      bool success = await orderProvider.placeOrder(
+        user: authProvider.user!,
+        cart: cartProvider,
+      );
 
-    if (success && context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Order placed successfully!'),
-          backgroundColor: Colors.green,
-        ),
-      );
-    } else if (context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Failed to place order. Please try again.'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      // Check if the widget is still mounted before updating UI
+      if (!context.mounted) return;
+
+      if (success) {
+        // Clear cart after successful order
+        cartProvider.clear();
+
+        // Show success message
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Order placed successfully!'),
+            backgroundColor: Colors.green,
+            duration: Duration(seconds: 2),
+          ),
+        );
+
+        // Refresh orders immediately
+        await orderProvider.fetchUserOrders(authProvider.user!.id);
+
+        // Navigate to orders screen after a brief delay
+        Future.delayed(const Duration(milliseconds: 500), () {
+          if (context.mounted) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const OrdersScreen()),
+            );
+          }
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Failed to place order. Please try again.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     }
   }
 }

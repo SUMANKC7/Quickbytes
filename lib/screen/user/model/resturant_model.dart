@@ -7,6 +7,7 @@ class RestaurantModel {
   final double rating;
   final int deliveryTime;
   final List<MenuItem> menuItems;
+  final double deliveryfee;
 
   RestaurantModel({
     required this.id,
@@ -17,6 +18,7 @@ class RestaurantModel {
     required this.rating,
     required this.deliveryTime,
     required this.menuItems,
+    required this.deliveryfee,
   });
 
   factory RestaurantModel.fromJson(Map<String, dynamic> json) {
@@ -33,6 +35,7 @@ class RestaurantModel {
               ?.map((item) => MenuItem.fromJson(item))
               .toList() ??
           [],
+      deliveryfee: (json['deliveryfee'] ?? 0).toDouble(),
     );
   }
 
@@ -46,6 +49,7 @@ class RestaurantModel {
       'rating': rating,
       'deliveryTime': deliveryTime,
       'menuItems': menuItems.map((item) => item.toJson()).toList(),
+      'deliveryfee': deliveryfee,
     };
   }
 }

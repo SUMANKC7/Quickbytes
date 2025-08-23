@@ -1,4 +1,5 @@
 // widgets/dashboard_tab.dart
+import 'package:quickbites/screen/user/provider/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quickbites/providers/menu_providers.dart';
@@ -12,9 +13,25 @@ class DashboardTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Admin Dashboard'),
+        title: Text(
+          "Welcome ${authProvider.user?.name}",
+          style: const TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Provider.of<AuthProvider>(context, listen: false).signOut();
+            },
+            icon: const Icon(Icons.logout, color: Colors.white),
+          ),
+        ],
         automaticallyImplyLeading: false,
         backgroundColor: Colors.orange,
         foregroundColor: Colors.white,
@@ -317,7 +334,7 @@ class DashboardTab extends StatelessWidget {
                     crossAxisCount: 2,
                     crossAxisSpacing: 16,
                     mainAxisSpacing: 16,
-                    childAspectRatio: 2.5,
+                    childAspectRatio: 2.0,
                     children: [
                       _buildActionCard(
                         'Add Restaurant',
@@ -368,32 +385,48 @@ class DashboardTab extends StatelessWidget {
       child: Card(
         elevation: 4,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        child: Container(
+        child: Padding(
           padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(icon, size: 32, color: color),
-              const SizedBox(height: 8),
-              Text(
-                value,
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: color,
+          child: FittedBox(
+            fit: BoxFit.scaleDown, // scales down content if space is small
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(icon, size: 40, color: color),
+                const SizedBox(height: 8),
+
+                /// Wrap the value in FittedBox for responsive scaling
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    value,
+                    style: TextStyle(
+                      fontSize: 26,
+                      fontWeight: FontWeight.bold,
+                      color: color,
+                    ),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                title,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey,
-                  fontWeight: FontWeight.w500,
+
+                const SizedBox(height: 4),
+
+                /// Use Wrap to handle multi-line text gracefully
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  children: [
+                    Text(
+                      title,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 13,
+                        color: Colors.grey,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

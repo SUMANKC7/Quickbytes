@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:quickbites/providers/menu_providers.dart';
 import 'package:quickbites/screen/admin/screen/resturant_card.dart';
 import 'package:quickbites/screen/user/provider/auth_provider.dart';
 import 'package:quickbites/screen/user/provider/cart_provider.dart';
@@ -29,6 +30,8 @@ class _HomeScreenState extends State<HomeScreen> {
         context,
         listen: false,
       ).fetchRestaurants();
+      // Initialize MenuProvider as well
+      Provider.of<MenuProvider>(context, listen: false).fetchMenuItems();
     });
   }
 
@@ -301,30 +304,43 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         )
                       else
-                        ListView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          itemCount: restaurantProvider.restaurants.length,
-                          itemBuilder: (context, index) {
-                            var restaurant =
-                                restaurantProvider.restaurants[index];
-                            return Padding(
-                              padding: const EdgeInsets.only(bottom: 12),
-                              child: RestaurantCard(
-                                restaurant: restaurant,
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          RestaurantDetailScreen(
-                                            restaurant: restaurant,
-                                          ),
-                                    ),
-                                  );
-                                },
+                        Consumer<MenuProvider>(
+                          builder: (context, menuProvider, child) {
+                            return ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
                               ),
+                              itemCount: restaurantProvider.restaurants.length,
+                              itemBuilder: (context, index) {
+                                var restaurant =
+                                    restaurantProvider.restaurants[index];
+
+                                // Get menu items count for this restaurant
+                                int menuItemsCount = menuProvider
+                                    .getItemCountByRestaurant(restaurant.id);
+
+                                return Padding(
+                                  padding: const EdgeInsets.only(bottom: 12),
+                                  child: RestaurantCard(
+                                    restaurant: restaurant,
+                                    menuItemsCount:
+                                        menuItemsCount, // Pass the count
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              RestaurantDetailScreen(
+                                                restaurant: restaurant,
+                                              ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                );
+                              },
                             );
                           },
                         ),

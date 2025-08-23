@@ -80,12 +80,13 @@ class _ManageMenuScreenState extends State<ManageMenuScreen> {
                   },
                 ),
                 const SizedBox(height: 12),
+
                 // Filter Row
                 Consumer<MenuProvider>(
                   builder: (context, menuProvider, child) {
                     return Row(
                       children: [
-                        Expanded(
+                        Flexible(
                           child: _buildFilterDropdown(
                             'Category',
                             menuProvider.selectedCategory,
@@ -94,7 +95,7 @@ class _ManageMenuScreenState extends State<ManageMenuScreen> {
                           ),
                         ),
                         const SizedBox(width: 12),
-                        Expanded(
+                        Flexible(
                           child: _buildFilterDropdown(
                             'Restaurant',
                             menuProvider.selectedRestaurant,
@@ -166,17 +167,32 @@ class _ManageMenuScreenState extends State<ManageMenuScreen> {
     List<String> options,
     Function(String?) onChanged,
   ) {
-    return DropdownButtonFormField<String>(
-      value: selectedValue,
-      decoration: InputDecoration(
-        labelText: label,
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      ),
-      items: options.map((option) {
-        return DropdownMenuItem(value: option, child: Text(option));
-      }).toList(),
-      onChanged: onChanged,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return DropdownButtonFormField<String>(
+          value: selectedValue.isNotEmpty ? selectedValue : null,
+          isExpanded: true, // 🔥 ensures text wraps instead of overflowing
+          decoration: InputDecoration(
+            labelText: label,
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 12,
+              vertical: 8,
+            ),
+          ),
+          items: options.map((option) {
+            return DropdownMenuItem(
+              value: option,
+              child: Text(
+                option,
+                overflow: TextOverflow.ellipsis, // 🔥 prevents overflow text
+                maxLines: 1,
+              ),
+            );
+          }).toList(),
+          onChanged: onChanged,
+        );
+      },
     );
   }
 
@@ -187,46 +203,55 @@ class _ManageMenuScreenState extends State<ManageMenuScreen> {
   ) {
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      elevation: 3,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
         padding: const EdgeInsets.all(16),
-        child: Row(
+        child: Wrap(
+          spacing: 16,
+          runSpacing: 12,
+          crossAxisAlignment: WrapCrossAlignment.start,
           children: [
             // Item Image
             ClipRRect(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(12),
               child: Image.network(
                 item.imageUrl,
-                width: 80,
-                height: 80,
+                width: 90,
+                height: 90,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
                   return Container(
-                    width: 80,
-                    height: 80,
-                    color: Colors.grey[300],
-                    child: const Icon(Icons.restaurant_menu),
+                    width: 90,
+                    height: 90,
+                    color: Colors.grey[200],
+                    child: const Icon(Icons.restaurant_menu, size: 40),
                   );
                 },
               ),
             ),
-            const SizedBox(width: 16),
-            // Item Details
-            Expanded(
+
+            // Expanded Item Details
+            ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: MediaQuery.of(context).size.width * 0.55,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
+                  // Name + Availability
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 4,
+                    crossAxisAlignment: WrapCrossAlignment.center,
                     children: [
-                      Expanded(
-                        child: Text(
-                          item.name,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
+                      Text(
+                        item.name,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
                         ),
+                        overflow: TextOverflow.ellipsis,
                       ),
                       Container(
                         padding: const EdgeInsets.symmetric(
@@ -235,37 +260,45 @@ class _ManageMenuScreenState extends State<ManageMenuScreen> {
                         ),
                         decoration: BoxDecoration(
                           color: item.isAvailable ? Colors.green : Colors.red,
-                          borderRadius: BorderRadius.circular(4),
+                          borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
                           item.isAvailable ? 'Available' : 'Unavailable',
                           style: const TextStyle(
                             color: Colors.white,
-                            fontSize: 12,
+                            fontSize: 11,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
                       ),
                     ],
                   ),
+
                   const SizedBox(height: 4),
                   Text(
                     item.restaurantName,
                     style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.orange[600],
+                      fontSize: 13,
+                      color: Colors.orange[700],
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  const SizedBox(height: 4),
+
+                  const SizedBox(height: 6),
                   Text(
                     item.description,
-                    style: const TextStyle(fontSize: 13, color: Colors.grey),
+                    style: const TextStyle(fontSize: 13, color: Colors.black54),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
+
                   const SizedBox(height: 8),
-                  Row(
+
+                  // Tags + Price
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 6,
+                    crossAxisAlignment: WrapCrossAlignment.center,
                     children: [
                       Container(
                         padding: const EdgeInsets.symmetric(
@@ -274,7 +307,7 @@ class _ManageMenuScreenState extends State<ManageMenuScreen> {
                         ),
                         decoration: BoxDecoration(
                           color: Colors.blue[50],
-                          borderRadius: BorderRadius.circular(4),
+                          borderRadius: BorderRadius.circular(6),
                         ),
                         child: Text(
                           item.category,
@@ -284,7 +317,6 @@ class _ManageMenuScreenState extends State<ManageMenuScreen> {
                           ),
                         ),
                       ),
-                      const SizedBox(width: 8),
                       if (item.isVegetarian)
                         Container(
                           padding: const EdgeInsets.symmetric(
@@ -293,7 +325,7 @@ class _ManageMenuScreenState extends State<ManageMenuScreen> {
                           ),
                           decoration: BoxDecoration(
                             color: Colors.green[50],
-                            borderRadius: BorderRadius.circular(4),
+                            borderRadius: BorderRadius.circular(6),
                           ),
                           child: Text(
                             'Veg',
@@ -303,7 +335,6 @@ class _ManageMenuScreenState extends State<ManageMenuScreen> {
                             ),
                           ),
                         ),
-                      const Spacer(),
                       Text(
                         '₹${item.price.toStringAsFixed(2)}',
                         style: const TextStyle(
@@ -317,8 +348,10 @@ class _ManageMenuScreenState extends State<ManageMenuScreen> {
                 ],
               ),
             ),
-            // Action Buttons
+
+            // Actions
             Column(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 IconButton(
                   icon: Icon(
@@ -332,9 +365,9 @@ class _ManageMenuScreenState extends State<ManageMenuScreen> {
                 ),
                 PopupMenuButton(
                   itemBuilder: (context) => [
-                    PopupMenuItem(
+                    const PopupMenuItem(
                       value: 'edit',
-                      child: const Row(
+                      child: Row(
                         children: [
                           Icon(Icons.edit, size: 16),
                           SizedBox(width: 8),
@@ -342,9 +375,9 @@ class _ManageMenuScreenState extends State<ManageMenuScreen> {
                         ],
                       ),
                     ),
-                    PopupMenuItem(
+                    const PopupMenuItem(
                       value: 'delete',
-                      child: const Row(
+                      child: Row(
                         children: [
                           Icon(Icons.delete, size: 16, color: Colors.red),
                           SizedBox(width: 8),
@@ -600,6 +633,8 @@ class _MenuItemDialogState extends State<MenuItemDialog> {
                           Expanded(
                             child: DropdownButtonFormField<String>(
                               value: _selectedCategory,
+                              isExpanded:
+                                  true, // ✅ Forces dropdown to take available width
                               decoration: const InputDecoration(
                                 labelText: 'Category *',
                                 border: OutlineInputBorder(),
@@ -607,7 +642,11 @@ class _MenuItemDialogState extends State<MenuItemDialog> {
                               items: _categories.map((category) {
                                 return DropdownMenuItem(
                                   value: category,
-                                  child: Text(category),
+                                  child: Text(
+                                    category,
+                                    overflow: TextOverflow
+                                        .ellipsis, // ✅ Prevents overflow
+                                  ),
                                 );
                               }).toList(),
                               onChanged: (value) {

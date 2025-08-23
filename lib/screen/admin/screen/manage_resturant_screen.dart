@@ -82,7 +82,7 @@ class ManageRestaurantsScreen extends StatelessWidget {
                         ),
                         Text('Delivery: ${restaurant.deliveryTime} mins'),
                         Text(
-                          'Fee: \${restaurant.deliveryFee.toStringAsFixed(2)}',
+                          'Fee: \$${restaurant.deliveryfee.toStringAsFixed(2)}',
                         ),
                       ],
                     ),
@@ -142,6 +142,7 @@ class ManageRestaurantsScreen extends StatelessWidget {
     final imageUrlController = TextEditingController();
     final deliveryTimeController = TextEditingController();
     final ratingController = TextEditingController(text: '4.0');
+    final deliveryfeeController = TextEditingController();
 
     showDialog(
       context: context,
@@ -221,7 +222,10 @@ class ManageRestaurantsScreen extends StatelessWidget {
                   imageUrl: imageUrlController.text,
                   deliveryTime: int.tryParse(deliveryTimeController.text) ?? 30,
                   rating: double.tryParse(ratingController.text) ?? 4.0,
-                  menuItems: [], // Empty menu items initially
+                  menuItems: [],
+                  deliveryfee:
+                      double.tryParse(deliveryfeeController.text) ??
+                      100, // Empty menu items initially
                 );
 
                 final success = await Provider.of<RestaurantProvider>(
@@ -270,6 +274,9 @@ class ManageRestaurantsScreen extends StatelessWidget {
     );
     final ratingController = TextEditingController(
       text: restaurant.rating.toString(),
+    );
+    final deliveryfeeController = TextEditingController(
+      text: restaurant.deliveryfee.toString(),
     );
 
     showDialog(
@@ -323,6 +330,15 @@ class ManageRestaurantsScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               TextField(
+                controller: deliveryfeeController,
+                decoration: const InputDecoration(
+                  labelText: 'Delivery Fee ',
+                  border: OutlineInputBorder(),
+                ),
+                keyboardType: TextInputType.number,
+              ),
+              const SizedBox(height: 16),
+              TextField(
                 controller: ratingController,
                 decoration: const InputDecoration(
                   labelText: 'Rating (0-5)',
@@ -354,8 +370,9 @@ class ManageRestaurantsScreen extends StatelessWidget {
                   rating:
                       double.tryParse(ratingController.text) ??
                       restaurant.rating,
-                  menuItems:
-                      restaurant.menuItems, // Preserve existing menu items
+                  menuItems: restaurant.menuItems,
+                  deliveryfee:
+                      restaurant.deliveryfee, // Preserve existing menu items
                 );
 
                 final success = await Provider.of<RestaurantProvider>(

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:quickbites/model/menu_item_model.dart';
+import 'package:quickbites/providers/menu_providers.dart';
 import 'package:quickbites/screen/user/model/resturant_model.dart';
 import 'package:quickbites/screen/user/provider/cart_provider.dart';
 import 'package:quickbites/screen/widget/menu_item_card.dart';
@@ -17,21 +19,16 @@ class RestaurantDetailScreen extends StatefulWidget {
 class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
   String selectedCategory = 'All';
 
-  List<String> get menuCategories {
-    Set<String> categories = {'All'};
-    for (var item in widget.restaurant.menuItems) {
-      categories.add(item.category);
-    }
-    return categories.toList();
-  }
-
-  List<MenuItem> get filteredMenuItems {
-    if (selectedCategory == 'All') {
-      return widget.restaurant.menuItems;
-    }
-    return widget.restaurant.menuItems
-        .where((item) => item.category == selectedCategory)
-        .toList();
+  @override
+  void initState() {
+    super.initState();
+    // Fetch menu items for this specific restaurant from Firebase
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<MenuProvider>(
+        context,
+        listen: false,
+      ).fetchMenuItemsByRestaurant(widget.restaurant.id);
+    });
   }
 
   @override
@@ -161,83 +158,167 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
             ),
           ),
 
-          // Menu Categories
-          SliverToBoxAdapter(
-            child: Container(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Menu Categories',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 12),
-                  SizedBox(
-                    height: 40,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: menuCategories.length,
-                      itemBuilder: (context, index) {
-                        String category = menuCategories[index];
-                        bool isSelected = selectedCategory == category;
-                        return Padding(
-                          padding: const EdgeInsets.only(right: 8),
-                          child: GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                selectedCategory = category;
-                              });
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 8,
-                              ),
-                              decoration: BoxDecoration(
-                                color: isSelected
-                                    ? Colors.orange
-                                    : Colors.grey[200],
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: Text(
-                                category,
-                                style: TextStyle(
-                                  color: isSelected
-                                      ? Colors.white
-                                      : Colors.black,
-                                  fontWeight: isSelected
-                                      ? FontWeight.w600
-                                      : FontWeight.normal,
-                                ),
-                              ),
-                            ),
-                          ),
-                        );
-                      },
+          // Menu Content
+          Consumer<MenuProvider>(
+            builder: (context, menuProvider, child) {
+              if (menuProvider.isLoading) {
+                return const SliverToBoxAdapter(
+                  child: Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(50),
+                      child: CircularProgressIndicator(color: Colors.orange),
                     ),
                   ),
-                ],
-              ),
-            ),
-          ),
+                );
+              }
 
-          // Menu Items
-          SliverList(
-            delegate: SliverChildBuilderDelegate((context, index) {
-              MenuItem menuItem = filteredMenuItems[index];
-              return Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
-                ),
-                child: MenuItemCard(menuItem: menuItem),
+              // Get available menu items for this restaurant
+              List<MenuItemModel> availableMenuItems = menuProvider.menuItems
+                  .where((item) => item.isAvailable)
+                  .toList();
+
+              if (availableMenuItems.isEmpty) {
+                return SliverToBoxAdapter(
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(50),
+                      child: Column(
+                        children: [
+                          Icon(
+                            Icons.restaurant_menu,
+                            size: 64,
+                            color: Colors.grey[400],
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            'No menu items available',
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.grey[600],
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'Please check back later',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey[500],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              }
+
+              // Get unique categories from Firebase menu items
+              Set<String> categorySet = {'All'};
+              for (var item in availableMenuItems) {
+                categorySet.add(item.category);
+              }
+              List<String> menuCategories = categorySet.toList();
+
+              // Filter menu items by selected category
+              List<MenuItemModel> filteredMenuItems = selectedCategory == 'All'
+                  ? availableMenuItems
+                  : availableMenuItems
+                        .where((item) => item.category == selectedCategory)
+                        .toList();
+
+              return SliverList(
+                delegate: SliverChildListDelegate([
+                  // Menu Categories
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Menu Categories',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        SizedBox(
+                          height: 40,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: menuCategories.length,
+                            itemBuilder: (context, index) {
+                              String category = menuCategories[index];
+                              bool isSelected = selectedCategory == category;
+                              return Padding(
+                                padding: const EdgeInsets.only(right: 8),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      selectedCategory = category;
+                                    });
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 16,
+                                      vertical: 8,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: isSelected
+                                          ? Colors.orange
+                                          : Colors.grey[200],
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: Text(
+                                      category,
+                                      style: TextStyle(
+                                        color: isSelected
+                                            ? Colors.white
+                                            : Colors.black,
+                                        fontWeight: isSelected
+                                            ? FontWeight.w600
+                                            : FontWeight.normal,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // Menu Items List
+                  ...filteredMenuItems.map((menuItem) {
+                    // Convert MenuItemModel to MenuItem for compatibility with existing MenuItemCard
+                    MenuItem legacyMenuItem = MenuItem(
+                      id: menuItem.id,
+                      name: menuItem.name,
+                      description: menuItem.description,
+                      price: menuItem.price,
+                      imageUrl: menuItem.imageUrl,
+                      category: menuItem.category,
+                      isVeg: menuItem.isVegetarian,
+                    );
+
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
+                      child: MenuItemCard(menuItem: legacyMenuItem),
+                    );
+                  }),
+
+                  // Bottom padding
+                  const SizedBox(height: 80),
+                ]),
               );
-            }, childCount: filteredMenuItems.length),
+            },
           ),
-
-          // Bottom padding
-          const SliverToBoxAdapter(child: SizedBox(height: 80)),
         ],
       ),
       bottomNavigationBar: Consumer<CartProvider>(

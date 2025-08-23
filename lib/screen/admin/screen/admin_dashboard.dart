@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:quickbites/providers/menu_providers.dart';
 import 'package:quickbites/screen/admin/screen/manage_order_screen.dart';
 import 'package:quickbites/screen/admin/screen/manage_resturant_screen.dart';
-import 'package:quickbites/screen/admin/widgets/dashboard_header.dart';
 import 'package:quickbites/screen/admin/widgets/dashboard_tab.dart';
 import 'package:quickbites/screen/manage_menu_screen.dart';
 import 'package:quickbites/screen/user/provider/order_provider.dart';
@@ -48,7 +47,6 @@ class _AdminDashboardState extends State<AdminDashboard> {
       body: IndexedStack(
         index: _currentIndex,
         children: [
-          DashboardHeader(),
           DashboardTab(onTabChange: _changeTab),
           const ManageRestaurantsScreen(),
           const ManageMenuScreen(), // Add the new menu screen
@@ -94,7 +92,6 @@ class _AdminDashboardState extends State<AdminDashboard> {
   }
 }
 
-// Placeholder Analytics Screen - implement as needed
 class AnalyticsScreen extends StatelessWidget {
   const AnalyticsScreen({super.key});
 
@@ -107,7 +104,9 @@ class AnalyticsScreen extends StatelessWidget {
       ),
       body: Consumer3<OrderProvider, RestaurantProvider, MenuProvider>(
         builder: (context, orderProvider, restaurantProvider, menuProvider, child) {
-          return Padding(
+          final width = MediaQuery.of(context).size.width;
+
+          return SingleChildScrollView(
             padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -117,43 +116,60 @@ class AnalyticsScreen extends StatelessWidget {
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 20),
-                // Stats Cards
-                GridView.count(
-                  shrinkWrap: true,
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
-                  childAspectRatio: 1.5,
-                  children: [
-                    _buildStatsCard(
-                      'Total Restaurants',
-                      restaurantProvider.restaurants.length.toString(),
-                      Icons.restaurant,
-                      Colors.blue,
-                    ),
-                    _buildStatsCard(
-                      'Total Menu Items',
-                      menuProvider.menuItems.length.toString(),
-                      Icons.restaurant_menu,
-                      Colors.green,
-                    ),
-                    _buildStatsCard(
-                      'Total Orders',
-                      orderProvider.orders.length.toString(),
-                      Icons.receipt_long,
-                      Colors.orange,
-                    ),
-                    _buildStatsCard(
-                      'Available Items',
-                      menuProvider.availableItemsCount.toString(),
-                      Icons.check_circle,
-                      Colors.teal,
-                    ),
-                  ],
+
+                /// Responsive Stats Grid
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    int crossAxisCount = constraints.maxWidth > 800
+                        ? 4
+                        : constraints.maxWidth > 500
+                        ? 2
+                        : 1;
+
+                    return GridView.count(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      crossAxisCount: crossAxisCount,
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 16,
+                      childAspectRatio: 1.5,
+                      children: [
+                        _buildStatsCard(
+                          'Total Restaurants',
+                          restaurantProvider.restaurants.length.toString(),
+                          Icons.restaurant,
+                          Colors.blue,
+                        ),
+                        _buildStatsCard(
+                          'Total Menu Items',
+                          menuProvider.menuItems.length.toString(),
+                          Icons.restaurant_menu,
+                          Colors.green,
+                        ),
+                        _buildStatsCard(
+                          'Total Orders',
+                          orderProvider.orders.length.toString(),
+                          Icons.receipt_long,
+                          Colors.orange,
+                        ),
+                        _buildStatsCard(
+                          'Available Items',
+                          menuProvider.availableItemsCount.toString(),
+                          Icons.check_circle,
+                          Colors.teal,
+                        ),
+                      ],
+                    );
+                  },
                 ),
+
                 const SizedBox(height: 20),
-                // Today's Stats
+
+                /// Today's Performance Card
                 Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                   child: Padding(
                     padding: const EdgeInsets.all(16),
                     child: Column(
@@ -167,38 +183,51 @@ class AnalyticsScreen extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 16),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Column(
-                              children: [
-                                Text(
-                                  orderProvider
-                                      .getTodaysOrderCount()
-                                      .toString(),
-                                  style: const TextStyle(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.orange,
+
+                        /// Responsive Row
+                        LayoutBuilder(
+                          builder: (context, constraints) {
+                            if (constraints.maxWidth < 400) {
+                              // Stack vertically for small screens
+                              return Column(
+                                children: [
+                                  _buildPerformanceStat(
+                                    orderProvider
+                                        .getTodaysOrderCount()
+                                        .toString(),
+                                    'Orders Today',
+                                    Colors.orange,
                                   ),
-                                ),
-                                const Text('Orders Today'),
-                              ],
-                            ),
-                            Column(
-                              children: [
-                                Text(
-                                  '₹${orderProvider.getTodaysSales().toStringAsFixed(2)}',
-                                  style: const TextStyle(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.green,
+                                  const SizedBox(height: 16),
+                                  _buildPerformanceStat(
+                                    'Rs${orderProvider.getTodaysSales().toStringAsFixed(2)}',
+                                    'Sales Today',
+                                    Colors.green,
                                   ),
-                                ),
-                                const Text('Sales Today'),
-                              ],
-                            ),
-                          ],
+                                ],
+                              );
+                            } else {
+                              // Side by side for larger screens
+                              return Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  _buildPerformanceStat(
+                                    orderProvider
+                                        .getTodaysOrderCount()
+                                        .toString(),
+                                    'Orders Today',
+                                    Colors.orange,
+                                  ),
+                                  _buildPerformanceStat(
+                                    'Rs${orderProvider.getTodaysSales().toStringAsFixed(2)}',
+                                    'Sales Today',
+                                    Colors.green,
+                                  ),
+                                ],
+                              );
+                            }
+                          },
                         ),
                       ],
                     ),
@@ -223,28 +252,47 @@ class AnalyticsScreen extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(16),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, size: 32, color: color),
-            const SizedBox(height: 8),
-            Text(
-              value,
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: color,
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, size: 32, color: color),
+              const SizedBox(height: 8),
+              Text(
+                value,
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: color,
+                ),
               ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              title,
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 12, color: Colors.grey),
-            ),
-          ],
+              const SizedBox(height: 4),
+              Text(
+                title,
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 12, color: Colors.grey),
+              ),
+            ],
+          ),
         ),
       ),
+    );
+  }
+
+  Widget _buildPerformanceStat(String value, String label, Color color) {
+    return Column(
+      children: [
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: color,
+          ),
+        ),
+        Text(label),
+      ],
     );
   }
 }

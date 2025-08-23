@@ -56,16 +56,34 @@ class ManageOrdersScreen extends StatelessWidget {
                       backgroundColor: order.status.color,
                       child: const Icon(Icons.receipt, color: Colors.white),
                     ),
-                    title: Text(
-                      'Order #${order.id.substring(0, 8)}',
-                      style: const TextStyle(fontWeight: FontWeight.w600),
+                    title: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Order #${order.id.substring(0, 8)}',
+                        style: const TextStyle(fontWeight: FontWeight.w600),
+                      ),
                     ),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Customer: ${order.userName}'),
-                        Text('Status: ${order.status.displayName}'),
-                        Text('Total: ₹${order.totalAmount.toStringAsFixed(0)}'),
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          alignment: Alignment.centerLeft,
+                          child: Text('Customer: ${order.userName}'),
+                        ),
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          alignment: Alignment.centerLeft,
+                          child: Text('Status: ${order.status.displayName}'),
+                        ),
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            'Total: ₹${order.totalAmount.toStringAsFixed(0)}',
+                          ),
+                        ),
                       ],
                     ),
                     trailing: Chip(
@@ -92,6 +110,8 @@ class ManageOrdersScreen extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(height: 8),
+
+                            /// Responsive items list
                             ...order.items.map(
                               (item) => Padding(
                                 padding: const EdgeInsets.symmetric(
@@ -101,14 +121,28 @@ class ManageOrdersScreen extends StatelessWidget {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text('${item.quantity}x ${item.name}'),
-                                    Text(
-                                      '₹${(item.price * item.quantity).toStringAsFixed(0)}',
+                                    Expanded(
+                                      child: FittedBox(
+                                        fit: BoxFit.scaleDown,
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                          '${item.quantity}x ${item.name}',
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      child: Text(
+                                        '₹${(item.price * item.quantity).toStringAsFixed(0)}',
+                                      ),
                                     ),
                                   ],
                                 ),
                               ),
                             ),
+
                             const Divider(),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -117,17 +151,24 @@ class ManageOrdersScreen extends StatelessWidget {
                                   'Total:',
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
-                                Text(
-                                  '₹${order.totalAmount.toStringAsFixed(0)}',
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
+                                FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Text(
+                                    '₹${order.totalAmount.toStringAsFixed(0)}',
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ),
                               ],
                             ),
                             const SizedBox(height: 16),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+
+                            /// Responsive action buttons
+                            Wrap(
+                              alignment: WrapAlignment.center,
+                              spacing: 8,
+                              runSpacing: 8,
                               children: [
                                 if (order.status == OrderStatus.placed)
                                   ElevatedButton(
