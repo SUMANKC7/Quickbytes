@@ -4,7 +4,6 @@ import 'package:QuickBites/screen/admin/screen/resturant_card.dart';
 import 'package:QuickBites/screen/user/provider/auth_provider.dart';
 import 'package:QuickBites/screen/user/provider/cart_provider.dart';
 import 'package:QuickBites/screen/user/provider/resturant_provider.dart';
-import 'package:QuickBites/model/resturant_model.dart';
 import 'package:QuickBites/screen/user/screen/order_screen.dart';
 import 'package:QuickBites/screen/user/screen/resturant_detail_screen.dart';
 import 'package:QuickBites/screen/widget/category_chip.dart';

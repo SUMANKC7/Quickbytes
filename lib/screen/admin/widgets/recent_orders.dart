@@ -60,7 +60,7 @@ class RecentOrders extends StatelessWidget {
               )
             else
               ...recentOrders.map(
-                (order) => _buildOrderItem(order as OrderModel),
+                (order) => _buildOrderItem(order),
               ),
           ],
         );
