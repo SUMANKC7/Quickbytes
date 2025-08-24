@@ -1,10 +1,10 @@
+import 'package:QuickBites/screen/user/provider/auth_provider.dart';
+import 'package:QuickBites/screen/user/provider/cart_provider.dart';
+import 'package:QuickBites/screen/user/provider/order_provider.dart';
+import 'package:QuickBites/screen/user/screen/order_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:quickbites/screen/user/provider/auth_provider.dart';
-import 'package:quickbites/screen/user/provider/cart_provider.dart';
-import 'package:quickbites/screen/user/provider/order_provider.dart';
-import 'package:quickbites/screen/user/screen/order_screen.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});

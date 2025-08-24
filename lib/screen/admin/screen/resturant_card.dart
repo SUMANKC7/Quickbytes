@@ -1,7 +1,6 @@
-// admin/screen/resturant_card.dart (Enhanced version)
+import 'package:QuickBites/screen/user/model/resturant_model.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:quickbites/screen/user/model/resturant_model.dart';
 
 class RestaurantCard extends StatelessWidget {
   final RestaurantModel restaurant;

@@ -1,7 +1,8 @@
 // providers/menu_provider.dart
+import 'package:QuickBites/model/menu_item_model.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:quickbites/model/menu_item_model.dart';
+
 import 'package:uuid/uuid.dart';
 // Import your menu item model here
 // import 'package:quickbites/screen/user/model/menu_item_model.dart';

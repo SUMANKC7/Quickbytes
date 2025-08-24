@@ -1,7 +1,8 @@
+import 'package:QuickBites/screen/user/model/order_model.dart';
+import 'package:QuickBites/screen/user/model/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:quickbites/screen/user/model/order_model.dart';
-import 'package:quickbites/screen/user/model/user_model.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 import 'cart_provider.dart';

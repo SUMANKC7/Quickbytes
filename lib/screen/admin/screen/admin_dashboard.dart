@@ -1,13 +1,13 @@
 // admin_dashboard.dart
+import 'package:QuickBites/providers/menu_providers.dart';
+import 'package:QuickBites/screen/admin/screen/manage_order_screen.dart';
+import 'package:QuickBites/screen/admin/screen/manage_resturant_screen.dart';
+import 'package:QuickBites/screen/admin/widgets/dashboard_tab.dart';
+import 'package:QuickBites/screen/manage_menu_screen.dart';
+import 'package:QuickBites/screen/user/provider/order_provider.dart';
+import 'package:QuickBites/screen/user/provider/resturant_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:quickbites/providers/menu_providers.dart';
-import 'package:quickbites/screen/admin/screen/manage_order_screen.dart';
-import 'package:quickbites/screen/admin/screen/manage_resturant_screen.dart';
-import 'package:quickbites/screen/admin/widgets/dashboard_tab.dart';
-import 'package:quickbites/screen/manage_menu_screen.dart';
-import 'package:quickbites/screen/user/provider/order_provider.dart';
-import 'package:quickbites/screen/user/provider/resturant_provider.dart';
 
 class AdminDashboard extends StatefulWidget {
   const AdminDashboard({super.key});

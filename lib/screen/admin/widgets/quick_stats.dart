@@ -1,8 +1,8 @@
 // quick_stats.dart
+import 'package:QuickBites/screen/user/provider/order_provider.dart';
+import 'package:QuickBites/screen/user/provider/resturant_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:quickbites/screen/user/provider/order_provider.dart';
-import 'package:quickbites/screen/user/provider/resturant_provider.dart';
 
 import 'stat_card.dart';
 

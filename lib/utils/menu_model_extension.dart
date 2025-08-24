@@ -1,8 +1,9 @@
 // utils/menu_model_extension.dart
-import 'package:quickbites/model/menu_item_model.dart';
-import 'package:quickbites/screen/user/model/resturant_model.dart';
 
 // Extension to convert between new MenuItemModel and legacy MenuItem
+import 'package:QuickBites/model/menu_item_model.dart';
+import 'package:QuickBites/model/resturant_model.dart';
+
 extension MenuItemModelExtension on MenuItemModel {
   // Convert MenuItemModel to MenuItem for backward compatibility
   MenuItem toLegacyMenuItem() {

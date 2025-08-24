@@ -1,14 +1,14 @@
+import 'package:QuickBites/providers/menu_providers.dart';
+import 'package:QuickBites/screen/admin/screen/admin_dashboard.dart';
+import 'package:QuickBites/screen/user/auth/login_screen.dart';
+import 'package:QuickBites/screen/user/provider/auth_provider.dart';
+import 'package:QuickBites/screen/user/provider/cart_provider.dart';
+import 'package:QuickBites/screen/user/provider/order_provider.dart';
+import 'package:QuickBites/screen/user/provider/resturant_provider.dart';
+import 'package:QuickBites/screen/user/screen/homescreen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:quickbites/providers/menu_providers.dart';
-import 'package:quickbites/screen/admin/screen/admin_dashboard.dart';
-import 'package:quickbites/screen/user/auth/login_screen.dart';
-import 'package:quickbites/screen/user/provider/auth_provider.dart';
-import 'package:quickbites/screen/user/provider/cart_provider.dart';
-import 'package:quickbites/screen/user/provider/order_provider.dart';
-import 'package:quickbites/screen/user/provider/resturant_provider.dart';
-import 'package:quickbites/screen/user/screen/homescreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {

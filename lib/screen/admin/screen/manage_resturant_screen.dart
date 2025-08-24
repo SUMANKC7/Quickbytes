@@ -1,7 +1,8 @@
+// import 'package:QuickBites/screen/user/model/resturant_model.dart';
+import 'package:QuickBites/screen/user/model/resturant_model.dart';
+import 'package:QuickBites/screen/user/provider/resturant_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:quickbites/screen/user/provider/resturant_provider.dart';
-import 'package:quickbites/screen/user/model/resturant_model.dart';
 
 class ManageRestaurantsScreen extends StatelessWidget {
   const ManageRestaurantsScreen({super.key});

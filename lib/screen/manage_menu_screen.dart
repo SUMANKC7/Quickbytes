@@ -1,9 +1,10 @@
 // screens/manage_menu_screen.dart
+import 'package:QuickBites/model/menu_item_model.dart';
+import 'package:QuickBites/providers/menu_providers.dart';
+import 'package:QuickBites/screen/user/provider/resturant_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:quickbites/model/menu_item_model.dart';
-import 'package:quickbites/providers/menu_providers.dart';
-import 'package:quickbites/screen/user/provider/resturant_provider.dart';
+
 // Import your providers and models
 // import 'package:quickbites/screen/user/provider/menu_provider.dart';
 // import 'package:quickbites/screen/user/provider/resturant_provider.dart';

@@ -1,8 +1,9 @@
+// import 'package:QuickBites/model/resturant_model.dart';
+import 'package:QuickBites/screen/user/model/resturant_model.dart';
+import 'package:QuickBites/screen/user/provider/cart_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:quickbites/screen/user/model/resturant_model.dart';
-import 'package:quickbites/screen/user/provider/cart_provider.dart';
 
 class MenuItemCard extends StatelessWidget {
   final MenuItem menuItem;

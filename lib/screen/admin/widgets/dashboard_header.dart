@@ -1,7 +1,7 @@
 // dashboard_header.dart
+import 'package:QuickBites/screen/user/provider/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:quickbites/screen/user/provider/auth_provider.dart';
 
 class DashboardHeader extends StatelessWidget {
   const DashboardHeader({super.key});

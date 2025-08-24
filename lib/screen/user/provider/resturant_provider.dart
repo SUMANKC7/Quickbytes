@@ -1,6 +1,6 @@
+import 'package:QuickBites/screen/user/model/resturant_model.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:quickbites/screen/user/model/resturant_model.dart';
 
 class RestaurantProvider extends ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;

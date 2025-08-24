@@ -1,7 +1,7 @@
+import 'package:QuickBites/screen/user/auth/signup_screen.dart';
+import 'package:QuickBites/screen/user/provider/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:quickbites/screen/user/auth/signup_screen.dart';
-import 'package:quickbites/screen/user/provider/auth_provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -35,16 +35,35 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 const SizedBox(height: 60),
                 // Logo and Welcome Text
-                Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Colors.orange,
-                    borderRadius: BorderRadius.circular(100),
-                  ),
-                  child: const Icon(
-                    Icons.restaurant,
-                    size: 60,
-                    color: Colors.white,
+                // Container(
+                //   height: MediaQuery.sizeOf(context).height * 0.18,
+                //   padding: const EdgeInsets.all(20),
+                //   decoration: BoxDecoration(
+                //     image: DecorationImage(
+                //       image: AssetImage("assets/logo.png"),
+                //       fit: BoxFit.contain,
+                //     ),
+                //     color: Colors.orange,
+                //     // borderRadius: BorderRadius.circular(10),
+                //   ),
+                //   // child: const Icon(
+                //   //   Icons.restaurant,
+                //   //   size: 60,
+                //   //   color: Colors.white,
+                //   // ),
+                //   // child: Image.asset("assets/logo.png"),
+                // ),
+                CircleAvatar(
+                  backgroundColor: Colors.transparent,
+                  // foregroundImage: AssetImage("assets/logo.png"),
+                  radius: 100,
+                  child: ClipOval(
+                    child: Image.asset(
+                      "assets/logo.png",
+                      fit: BoxFit.cover,
+                      width: 150,
+                      height: 150,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 32),
@@ -166,38 +185,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
 
                 const SizedBox(height: 32),
-
-                // Demo Accounts Section
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.blue[50],
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.blue[200]!),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Demo Accounts',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.blue[800],
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'Admin: admin@foodapp.com / admin123',
-                        style: TextStyle(fontSize: 14, color: Colors.blue[700]),
-                      ),
-                      Text(
-                        'User: user@foodapp.com / user123',
-                        style: TextStyle(fontSize: 14, color: Colors.blue[700]),
-                      ),
-                    ],
-                  ),
-                ),
 
                 const SizedBox(height: 24),
 

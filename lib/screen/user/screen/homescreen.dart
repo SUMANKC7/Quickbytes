@@ -1,13 +1,15 @@
+import 'package:QuickBites/providers/menu_providers.dart';
+import 'package:QuickBites/screen/admin/screen/resturant_card.dart';
+// import 'package:QuickBites/screen/admin/screen/resturant_card.dart';
+import 'package:QuickBites/screen/user/provider/auth_provider.dart';
+import 'package:QuickBites/screen/user/provider/cart_provider.dart';
+import 'package:QuickBites/screen/user/provider/resturant_provider.dart';
+import 'package:QuickBites/model/resturant_model.dart';
+import 'package:QuickBites/screen/user/screen/order_screen.dart';
+import 'package:QuickBites/screen/user/screen/resturant_detail_screen.dart';
+import 'package:QuickBites/screen/widget/category_chip.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:quickbites/providers/menu_providers.dart';
-import 'package:quickbites/screen/admin/screen/resturant_card.dart';
-import 'package:quickbites/screen/user/provider/auth_provider.dart';
-import 'package:quickbites/screen/user/provider/cart_provider.dart';
-import 'package:quickbites/screen/user/provider/resturant_provider.dart';
-import 'package:quickbites/screen/user/screen/order_screen.dart';
-import 'package:quickbites/screen/user/screen/resturant_detail_screen.dart';
-import 'package:quickbites/screen/widget/category_chip.dart';
 import 'cart_screen.dart';
 import 'profile_screen.dart';
 

@@ -1,8 +1,8 @@
+import 'package:QuickBites/screen/user/model/order_model.dart';
+import 'package:QuickBites/screen/user/provider/auth_provider.dart';
+import 'package:QuickBites/screen/user/provider/order_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:quickbites/screen/user/model/order_model.dart';
-import 'package:quickbites/screen/user/provider/auth_provider.dart';
-import 'package:quickbites/screen/user/provider/order_provider.dart';
 
 class OrdersScreen extends StatefulWidget {
   const OrdersScreen({super.key});

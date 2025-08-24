@@ -1,10 +1,10 @@
 // widgets/dashboard_tab.dart
-import 'package:quickbites/screen/user/provider/auth_provider.dart';
+import 'package:QuickBites/providers/menu_providers.dart';
+import 'package:QuickBites/screen/user/provider/auth_provider.dart';
+import 'package:QuickBites/screen/user/provider/order_provider.dart';
+import 'package:QuickBites/screen/user/provider/resturant_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:quickbites/providers/menu_providers.dart';
-import 'package:quickbites/screen/user/provider/order_provider.dart';
-import 'package:quickbites/screen/user/provider/resturant_provider.dart';
 
 class DashboardTab extends StatelessWidget {
   final Function(int) onTabChange;

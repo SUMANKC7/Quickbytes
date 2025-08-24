@@ -1,5 +1,5 @@
+import 'package:QuickBites/screen/user/model/resturant_model.dart';
 import 'package:flutter/material.dart';
-import 'package:quickbites/screen/user/model/resturant_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 

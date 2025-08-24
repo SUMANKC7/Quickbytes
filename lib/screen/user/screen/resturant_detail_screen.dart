@@ -1,11 +1,13 @@
+import 'package:QuickBites/model/menu_item_model.dart';
+// import 'package:QuickBites/model/resturant_model.dart';
+import 'package:QuickBites/providers/menu_providers.dart';
+import 'package:QuickBites/screen/user/model/resturant_model.dart';
+
+import 'package:QuickBites/screen/user/provider/cart_provider.dart';
+import 'package:QuickBites/screen/widget/menu_item_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:quickbites/model/menu_item_model.dart';
-import 'package:quickbites/providers/menu_providers.dart';
-import 'package:quickbites/screen/user/model/resturant_model.dart';
-import 'package:quickbites/screen/user/provider/cart_provider.dart';
-import 'package:quickbites/screen/widget/menu_item_card.dart';
 
 class RestaurantDetailScreen extends StatefulWidget {
   final RestaurantModel restaurant;
